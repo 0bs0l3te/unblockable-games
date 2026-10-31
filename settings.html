@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      label {
+        display: inline-block;
+        width: 280px;
+        margin-bottom: 10px;
+      }
+      input {
+        vertical-align: middle;
+        margin-bottom: 10px;
+      }
+      input[type="color"] {
+        cursor: pointer;
+      }
+      input[type="text"] {
+        padding: 4px;
+        width: 100px;
+      }
+      button {
+        margin-top: 15px;
+        margin-right: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        color: white;
+      }
+      #applyBtn {
+        background-color: #4CAF50;
+      }
+      #randomBtn {
+        background-color: #2196F3;
+      }
+      #resetBtn {
+        background-color: #f44336;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Customize appearance of Unblockable Games</h1>
+    
+    <label for="backgroundTxt">Background Color</label>
+    <input type="color" name="backgroundTxt" id="background" class="colInput"/>
+    <br>
+    
+    <label for="grdCol">Grid Gradient Color</label>
+    <input type="color" name="grdCol" id="gradientColor1" class="colInput" />
+    <br />
+    
+    <label for="grdColSec">Secondary Grid Gradient Color</label>
+    <input type="color" name="grdColSec" id="gradientColor2" class="colInput" />
+    <br />
+    
+    <label for="crdGrd">Card Gradient Color</label>
+    <input type="color" name="crdGrd" id="cardGradient1" class="colInput" />
+    <br />
+    
+    <label for="crdGrdSec">Secondary Card Gradient Color</label>
+    <input type="color" name="crdGrdSec" id="cardGradient2" class="colInput" />
+    <br />
+    
+    <label for="hovcrdGrd">Hovering Card Gradient Color</label>
+    <input type="color" name="hovcrdGrd" id="cardGradientHover1" class="colInput" />
+    <br />
+    
+    <label for="hovcrdGrdSec">Secondary Hovering Card Gradient Color</label>
+    <input type="color" name="hovcrdGrdSec" id="cardGradientHover2" class="colInput" />
+    <br />
+
+    <label for="borderColor">Border Color</label>
+    <input type="color" name="borderColor" id="borderColor" class="colInput" />
+    <br />
+
+    <label for="textColor">Text Color</label>
+    <input type="color" name="textColor" id="textColor" class="colInput" />
+    <br />
+
+    <label for="arrowColor">Arrow Color</label>
+    <input type="color" name="arrowColor" id="arrowColor" class="colInput" />
+    <br />
+
+    <label for="borderRadius">Grid Border Radius (e.g., 16px)</label>
+    <input type="text" name="borderRadius" id="borderRadius" />
+    <br />
+
+    <label for="cardRadius1">Card Radius 1 (e.g., 20px)</label>
+    <input type="text" name="cardRadius1" id="cardRadius1" />
+    <br />
+
+    <label for="cardRadius2">Card Radius 2 (e.g., 10px)</label>
+    <input type="text" name="cardRadius2" id="cardRadius2" />
+    <br />
+
+    <button id="applyBtn">Apply Settings</button>
+    <button id="randomBtn">Randomize Colors</button>
+    <button id="resetBtn">Reset to Default</button>
+
+    <script>
+      const defaultVars = {
+        background: "#000000",          // Defaulting empty background to black for valid hex display
+        gradientColor1: "#300835",
+        gradientColor2: "#100429",      // rgb(16, 4, 41)
+        cardGradient1: "#878bc5",       // rgb(135, 139, 165)
+        cardGradient2: "#686879",       // rgb(104, 104, 121)
+        cardGradientHover1: "#525463",  // rgb(82, 84, 99)
+        cardGradientHover2: "#35353d",  // rgb(53, 53, 61)
+        borderColor: "#260745",         // rgb(38, 7, 69)
+        textColor: "#ffffff",           // white
+        arrowColor: "#808080",          // gray
+        borderRadius: "16px",
+        cardRadius1: "20px",
+        cardRadius2: "10px"
+      };
+
+      // Helper function to pull saved values down to the form fields
+      function updateInputsOnUI(data) {
+        document.getElementById('background').value = data.background || "#000000";
+        document.getElementById('gradientColor1').value = data.gradientColor1;
+        document.getElementById('gradientColor2').value = data.gradientColor2;
+        document.getElementById('cardGradient1').value = data.cardGradient1;
+        document.getElementById('cardGradient2').value = data.cardGradient2;
+        document.getElementById('cardGradientHover1').value = data.cardGradientHover1;
+        document.getElementById('cardGradientHover2').value = data.cardGradientHover2;
+        
+        // Setting values for the new properties
+        document.getElementById('borderColor').value = data.borderColor;
+        document.getElementById('textColor').value = data.textColor;
+        document.getElementById('arrowColor').value = data.arrowColor;
+        document.getElementById('borderRadius').value = data.borderRadius;
+        document.getElementById('cardRadius1').value = data.cardRadius1;
+        document.getElementById('cardRadius2').value = data.cardRadius2;
+      }
+
+      // 1. Fetch current settings or default
+      let savedData = JSON.parse(localStorage.getItem('style-settings') ?? JSON.stringify(defaultVars));
+
+      // 2. Display values when window loads
+      window.addEventListener('DOMContentLoaded', () => {
+        updateInputsOnUI(savedData);
+      });
+
+      // 3. Save Changes
+      document.getElementById('applyBtn').addEventListener('click', () => {
+        savedData = {
+          background: document.getElementById('background').value,
+          gradientColor1: document.getElementById('gradientColor1').value,
+          gradientColor2: document.getElementById('gradientColor2').value,
+          cardGradient1: document.getElementById('cardGradient1').value,
+          cardGradient2: document.getElementById('cardGradient2').value,
+          cardGradientHover1: document.getElementById('cardGradientHover1').value,
+          cardGradientHover2: document.getElementById('cardGradientHover2').value,
+          borderColor: document.getElementById('borderColor').value,
+          textColor: document.getElementById('textColor').value,
+          arrowColor: document.getElementById('arrowColor').value,
+          borderRadius: document.getElementById('borderRadius').value,
+          cardRadius1: document.getElementById('cardRadius1').value,
+          cardRadius2: document.getElementById('cardRadius2').value
+        };
+
+        localStorage.setItem('style-settings', JSON.stringify(savedData));
+        alert('Settings applied successfully!');
+      });
+
+      // 4. Randomize Colors Action
+      document.getElementById('randomBtn').addEventListener('click', () => {
+        const colorInputs = document.querySelectorAll('.colInput');
+        colorInputs.forEach(input => {
+          // Generate random 6-digit hex color strings
+          input.value = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+        });
+      });
+
+      // 5. Handle Reset Action
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        localStorage.removeItem('style-settings');
+        savedData = { ...defaultVars };
+        updateInputsOnUI(defaultVars);
+        alert('Settings restored to defaults!');
+      });
+    </script>
+  </body>
+</html>
